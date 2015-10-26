@@ -2,11 +2,11 @@
 Yet another c++ class wrapper for sockets.
 
 ## Features
-Includes meta SocketHandler, ServerSocketHandler and ClientSocketHandler.
+Includes meta SocketHandler, ServerSocketHandler and ClientSocketHandler.  
 They store and handle socket connections. Sockets are added via
 acceptConnection(port) and connectSock(serv_addr, port) for server and client.
-The, you may do writeAll() or readAll() for specific socket:
-serverSocketHandler[socket_descriptor].writeAll("Hello, world");
+Then, you may do writeAll() or readAll() for specific socket:  
+serverSocketHandler[socket_descriptor].writeAll("Hello, world");  
 You also may addDefaultSetsockopt. (see below)
 
 ## Plans
@@ -15,6 +15,7 @@ Add TLS/SSL encryption.
 # Usage example:
 
 ## On server:
+```c++
 ServerSocketHandler socketHandler(port); // e.g. port = 10001
 socketHandler.bindAndListen();
 // add default sockopts, if wanted
@@ -28,8 +29,10 @@ if (conn_fd > 0) {
     cout << response_string << endl;
     socketHandler[conn_fd].disconnect();
 }
+```
 
 ## On client:
+```c++
 ClientSocketHandler socketHandler();
 // add default sockopts, if wanted
 int conn_fd = socketHandler.connectSock(serv_host, serv_port); // e.g. serv_host = 127.0.0.1, port = 10001
@@ -42,8 +45,10 @@ if (conn_fd > 0) {
     cout << response_string << endl;
     socketHandler[conn_fd].disconnect();
 }
+```
 
 ## Examples for setsockopt:
+```c++
 // reuse socket(do not close connection), set 5 sec timeout for send and 10 sec timeout for recv
 int b_reuse_sock = 1;
 socketHandler.addDefaultSetsockopt(SOL_SOCKET, SO_REUSEADDR, (char *) &b_reuse_sock, sizeof(b_reuse_sock));
@@ -56,4 +61,4 @@ socketHandler.addDefaultSetsockopt(SOL_SOCKET, SO_SNDTIMEO, (char *) &timeout, s
 timeout.tv_sec = 10; // 10 secs timeout for recv, as it could process some stuff
 socketHandler.addDefaultSetsockopt(SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
 // you still can use generic setsockopt() to set socket-specific options
-
+```

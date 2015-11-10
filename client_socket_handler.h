@@ -10,7 +10,10 @@
 class ClientSocketHandler : public SocketHandler {
 public:
     ClientSocketHandler() {};
-    int connectSock(string host, int portnum);
+    int connectSockByIP(string ip, int portnum);
+    int connectSockByHostname(string hostname, int portnum);
+private:
+    int hostname_to_ip(const string& host, list<string>& ip_address);
 };
 
 #endif //CLIENTSOCKETHANDLER_H

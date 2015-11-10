@@ -22,12 +22,9 @@ ssize_t SocketConnection::writeAll(string write_str) {
         const char *write_str_p = write_str.data();
         ssize_t bytes_written_total = 0, bytes_written;
         while (bytes_written_total < write_str.length()) {
-            cout << name << ": written=" << bytes_written_total << ". Trying to write " <<
-            write_str.length() - bytes_written_total << endl;
             size_t write_str_size = write_str.length() - bytes_written_total > max_transfer_size ?
                                     max_transfer_size : write_str.length() - bytes_written_total;
             bytes_written = write(sock_fd, write_str_p + bytes_written_total, write_str_size);
-            cout << name << ": written=" << bytes_written_total << ". Just wrote " << bytes_written << endl;
             if (bytes_written < 0) {
                 cout << name << " Error writing to socket";
                 return bytes_written;
@@ -47,11 +44,13 @@ ssize_t SocketConnection::readAll(string& read_string, long min_bytes_to_read) {
         bytes_read = read(sock_fd, buffer, max_transfer_size);
         if (bytes_read < 0) {
             cerr << "Connection with " << name << " dropped." << endl;
-            return disconnect();
+            // return disconnect();
+            return bytes_read;
         }
         if (bytes_read == 0) {
             cerr << "Connection with " << name << " closed by remote host." << endl;
-            return disconnect();
+            return bytes_read;
+            // return disconnect();
         }
         else {
             read_string += string(&(buffer[0]), bytes_read);

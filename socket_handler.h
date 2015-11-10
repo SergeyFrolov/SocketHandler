@@ -28,7 +28,7 @@ protected:
     list<SocketConnection> connections;
     list<SetSockOptParams> default_setsockopts;
 
-    int socket_family;
+    sa_family_t socket_family;
     int socket_type;
     int socket_protocol;
 
@@ -41,8 +41,8 @@ public:
     connections_iterator connections_end() {return connections.end  ();}
 
     void addDefaultSetsockopt(int level, int optname, void *optval, socklen_t optlen, bool retroactive = 0);
-
     int disconnect(int sock_fd);
+
 };
 
 
@@ -52,6 +52,8 @@ private:
     int sock_fd;
     SocketHandler* sc;
     size_t max_transfer_size;
+
+    int disconnect();
 public:
     string name;
 
@@ -62,7 +64,6 @@ public:
     ssize_t readAll(string& read_string, long min_bytes_to_read = 0);
     ssize_t readAll(char* write_char_ptr, ssize_t len, long min_bytes_to_read = 0);
     int get_fd(){return sock_fd;}
-    int disconnect();
 };
 
 
